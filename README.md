@@ -15,6 +15,7 @@
   - [Author](#author)
   - [Acknowledgments](#acknowledgments)
   - [Time estimate](#time-estimate)
+    - [Questions - Sonia Recording](#questions---sonia-recording)
 
 ## Overview
 
@@ -51,7 +52,13 @@ The main focus of this exercise is on testing Flask. Ensure writing tests **for 
 
 -   How to pass the form value from `app.js` to server side?
     -   Pass form value from `app.js` vs from `html`?
+        -   Set up a post route where form data is sent to, and process the data inside the route.
+        -   Then, redirect to a page that is a `GET` request, and show confirmation/proof that form data was used.
+        -   Server then respond with JSON instead of HTML
+- 
     -   How to verify data is sent to server?
+
+-   When using JS to send a `POST` request, is there any way to see the `POST variables`?
   
 
 ### Links
@@ -69,7 +76,29 @@ The main focus of this exercise is on testing Flask. Ensure writing tests **for 
 
 ### What I learned
 
+How do I know if the form data was passed via JavaScript or directly from HTML?
+
+In this specific scenario, 
+
+- **Standard Form Behavior:** When a user submits a form using the submit button, the browser sends an HTTP request to the server-side route specified in the `action` attribute of the form tag. 
+
+- **Flask Request Handling:** The Flask framework, in this case, interceptes this request and parses the form data. It doesn't matter whether the form submission was triggered by JS or a direct user click. 
+
+- **`request.form` Access:** `request.form` dictionary in Flask provides access to all the form data submitted with the request, regardless of the submission method. 
+
 ### Continued development
+
+**AJAX Request:**
+
+- AJAX (Asynchronous JavaScript and XML) is a technique that allows websites to send requests to the server **without refreshing the whole page**. Traditionally, the entire page would reload to show any changes. This makes things feel faster and more responsive. 
+
+**JSON Response:**
+
+- When server (Python code) receives an AJAX request, it needs to send back a response. Often, you want to send data back to the JavaScript code that made the request. 
+
+- **JSON (JavaScript Obbject Notation)** is a format for storing and transmitting data. It's lightweight and easy for **both** JavaScript and Python to understand.
+
+- Instead of sending back a whole HTML page, you can use Flask's ``jsonify` function to create a JSON response containing the information you want to send back. 
 
 ### Useful resources
 
@@ -83,4 +112,26 @@ Springboard: 6 - 8 hours
 Expectation: 12 - 16 hours
 
 First session: 2 hrs 
-Second session: 6 hurs
+Second session: 6 hrs
+Thrid session: 6 hrs
+
+### Questions - Sonia Recording 
+
+- 00:46, Why do I need to give it a `key word`?
+  
+```js
+let formData = {guess: $guessInput.val()}
+```
+
+- 03:04
+  
+```python
+
+# Endpoint
+@app.route('/submit-guess', methods=['POST'])
+def submit():
+  guess = request.json['guess']
+  ...
+  return jsonify({})
+
+```

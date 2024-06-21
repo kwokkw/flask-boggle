@@ -2,18 +2,32 @@ const $form = $("form");
 
 $form.on("submit", function (e) {
   e.preventDefault();
-  sendToServer($("input").val());
+  // sendToServer($("input").val());
+
+  $formData = { keyword: $("input").val() };
+  sendToServer($formData);
+
+  console.log("Submit btn clicked");
 });
 
 // TODO
 async function sendToServer(data) {
   try {
+    // const resp = await axios({
+    //   method: "POST",
+    //   url: "http://127.0.0.1:5000/submit-guess",
+    //   data: data,
     const resp = await axios({
       method: "POST",
       url: "http://127.0.0.1:5000/submit-guess",
       data: data,
     });
-    // console.log(resp);
+    // Check for submission status
+    if (resp.status === 200) {
+      console.log("Guess submitted successfully.");
+    } else {
+      console.log("Guess submitting error: ", resp.status);
+    }
   } catch (error) {
     console.log("ERROR: ", error);
   }

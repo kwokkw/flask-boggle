@@ -44,7 +44,7 @@ def home_page():
 @app.route("/submit-guess", methods=["POST"])
 def submit_guess():
     # take the form value and check if it is a valid word in the dictionary using the words variable in your app.py
-    guess = request.json["guess"]
+    guess = request.form.get("guess")
     game_board = session["game_board"]
     response = boggle_game.check_valid_word(game_board, guess)
 

@@ -13,13 +13,22 @@ from flask_debugtoolbar import DebugToolbarExtension
 
 boggle_game = Boggle()
 
+# Initialization of Flask Application
 app = Flask(__name__)
+
+# Setting Configuration
+# The `SECRET_KEY` is used to maintain sessions and
+# protect against certain types of attacks.
 app.config["SECRET_KEY"] = "play"
+
+# Enables debug mode, provides detailed erro msg.
 app.debug = True
 
 # Install flask debug toolbar
 debug = DebugToolbarExtension(app)
 
+# Disables the behavior of intercepting redirects,
+# allowing redirects to proceed normally.
 app.config["DEBUG_TB_INTERCEPT_REDIRECTS"] = False
 
 

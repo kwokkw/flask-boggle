@@ -20,6 +20,7 @@ app = Flask(__name__)
 # The `SECRET_KEY` is used to maintain sessions and
 # protect against certain types of attacks.
 app.config["SECRET_KEY"] = "play"
+app.debug = True
 
 # Enables debug mode, provides detailed erro msg.
 app.debug = True

@@ -43,14 +43,22 @@ def home_page():
 # TODO
 @app.route("/submit-guess", methods=["POST"])
 def submit_guess():
+
+    # DEBUG PURPOSE
+    request_key = request.form
+    print(request_key)
+
     # take the form value and check if it is a valid word in the dictionary using the words variable in your app.py
-    guess = request.form.get("guess")
+    # guess = request.form.get("guess")  # Doesn't work either.
+    guess = request.form.get("keyword")  # Value of `guess` - None
+
+    import pdb
+
+    pdb.set_trace()
+
     game_board = session["game_board"]
     response = boggle_game.check_valid_word(game_board, guess)
 
-    # UNABLE TO SEE PRINT STATEMENT IN GIT BASH - do not understand the behavior
-    print("***********************")
-    print(guess)
     print("***********************")
 
     # `jsonify` converts Python data into a JSON format that can be sent and understood by JavaScript.

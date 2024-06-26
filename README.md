@@ -38,11 +38,15 @@ The main focus of this exercise is on testing Flask. Ensure writing tests **for 
 -   Make an AJAX requests and send form value using axios to the server. 
     -   Difference between the two approaches.
 ```js
+    // Object destructuring 
+    //    -   Simple, more concise.
     const respOne = await axios.post("http://127.0.0.1:5000/submit-guess", {
       guess: data,
     });
 ```
 ```js
+    // Explicit Configuration Object
+    //    -   More control over the request configuration.
     const respTwo = await axios({
       method: "POST",
       url: "http://127.0.0.1:5000/submit-guess",
@@ -59,6 +63,20 @@ The main focus of this exercise is on testing Flask. Ensure writing tests **for 
     -   How to verify data is sent to server?
 
 -   When using JS to send a `POST` request, is there any way to see the `POST variables`?
+  
+-   Consistently running into `INTERNAL SERVER ERROR` when passing the form value from frontend to backend. 
+    -    Handling the error in JS with `try...catch`, checking the type error object to identify the specific error that occurring. 
+         -    The request was made and the server responded with a status code that falls out of the range of 2xx.
+         -    Checked Form Data on Frontend:
+              -    Submitted a `guess` through the form.
+              -    Inspected "Network" tab.
+              -    In the "Payload", verified the `keyword` field contains the guess value.
+                   -    `{keyword: "hello"} keyword: "hello"`
+                   -    I confirmed the request reaches the backend and the form data seems correct, the value of `guess` is `None`.
+         -    Inspect Backend Code:
+              -    The value of `request.form` equals `ImmutableMultiDict([])`, but empty
+              -    `guess = request.form.get("keyword")`,  The key matches frontend data, and has a value of `None`.
+
   
 
 ### Links

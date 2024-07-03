@@ -8,21 +8,42 @@
   </head>
   <body>
     <h1>Welcome To The Boggle Game</h1>
-    <div id="game-board">{{game_board}}</div>
-    <form action="/submit-guess">
+    <div id="game-board">
+      <table>
+        <!-- 
+          Use curly braces to access variables and expressions defined within the template itself.
+          When iterating over data passed from Flask backend, 
+          (game_board), access it directly without additional curly braces within the loop.
+        -->
+        {% for row in game_board %}
+        <tr>
+          {% for letter in row %}
+          <td>{{letter}}</td>
+          {% endfor %}
+        </tr>
+        {% endfor %}
+      </table>
+    </div>
+
+    <p id="server-resp">Make a guess</p>
+
+    <form id="submit-guess">
       <label for="guess">Guess: </label>
-      <input type="text" name="guess" required />
+      <input type="text" name="guess" autofocus required />
       <button id="submit-btn" type="submit">Submit</button>
     </form>
 
-    {% for msg in get_flashed_messages() %}
-    <p id="server-resp">{{ msg }}</p>
-    {% endfor %}
+    <p>Counting Down: <span id="timer"></span></p>
+    <p>Score: <span id="score">0</span></p>
+
+    <p>Highest Score: <span id="high-score">0</span></p>
+    <p>Game Has Played: <span id="game-played">0</span></p>
 
     <!-- Including jQuery ans axios. -->
     <script src="https://unpkg.com/jquery"></script>
     <script src="https://unpkg.com/axios/dist/axios.js"></script>
 
-    <script src="/static/app.js"></script>
+    <!-- <script src="/static/app.js"></script> -->
+    <script src="/static/boggle.js"></script>
   </body>
 </html>

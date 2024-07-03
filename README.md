@@ -15,7 +15,7 @@
   - [Author](#author)
   - [Acknowledgments](#acknowledgments)
   - [Time estimate](#time-estimate)
-    - [Questions - Sonia Recording](#questions---sonia-recording)
+    - [Debug](#debug)
 
 ## Overview
 
@@ -76,25 +76,50 @@ The main focus of this exercise is on testing Flask. Ensure writing tests **for 
          -    Inspect Backend Code:
               -    The value of `request.form` equals `ImmutableMultiDict([])`, but empty
               -    `guess = request.form.get("keyword")`,  The key matches frontend data, and has a value of `None`.
+    - **Mistake**
+          - In ths particular case, data is being sent from a JavaScript function using Axios, not HTML form. 
+              - **Data Sending Method**: `app.js` uses `axios.post` which indicates sending data through the **`POST` request method.**
+              - **`request.form` vs `request.json`**
+                  - `request.form` is used for data submitted through HTML forms. This data is typically sent using the GET or POST methods, but with the data encoded in the URL (for GET) or the body (for POST) of the request, **not as JSON**.
+                  - `request.json` is specifically used for data sent in JSON format, which is the case with the `axios.post` request.
+    - **Remember**
+        - Use `request.json.get` for data sent in JSON format (like with Axios.post).
+        - Use `request.form.get` for data submitted through HTML forms.
 
-  
+
+**Design the Frontend in an Object Oriented Way**
+
+- 
+
 
 ### Links
+
+[jQuery disable/enable submit button](https://stackoverflow.com/questions/1594952/jquery-disable-enable-submit-button)
 
 ## My process
 
 1.  Planning and Reading Code
     -   Backend (Flask and Python)
         -   Set Up Flask App
-        -   Backen Logic (`boggle.py` provided)
+        -   Backend Logic (`boggle.py` provided)
     -   Frontend (HTML, CSS, JS)
     -   Testing
+2.  Displaying the board
+3.  Checking for a valid word
+4.  Posting a score
+5.  Adding a timer
+   -  `setInterval()`
+6.  Keep track of user gameplay frequency . 
+    - `localStorage` (Frontend)
+7.  Keep track of high score . 
+    - `Session` (Backend)
+8.  Design the frontend in an object oriented way.
 
 ### Built with
 
 ### What I learned
 
-How do I know if the form data was passed via JavaScript or directly from HTML?
+**How do I know if the form data was passed via JavaScript or directly from HTML?**
 
 In this specific scenario, 
 
@@ -103,6 +128,40 @@ In this specific scenario,
 - **Flask Request Handling:** The Flask framework, in this case, interceptes this request and parses the form data. It doesn't matter whether the form submission was triggered by JS or a direct user click. 
 
 - **`request.form` Access:** `request.form` dictionary in Flask provides access to all the form data submitted with the request, regardless of the submission method. 
+
+**Why both `request.json` on the server side and `data` sent by Axios on the frontend are needed to unpack data.**
+
+1.  Frontend
+   -  `Axios` to send a `POST` request to the erver with data. 
+   -  Axios automatically converts the data provided into JSON format before sending it. 
+
+2. Backend
+   -  The server receives the request through Flask.
+   -  Flask provides access to the request details through the `request` object.
+   -  Even though the data was sent as JSON on the frontend, it arrives as part of the overall request on the server.
+   -  To access the actual content (data/value) from the JSON data, the server uses `request.json`. This extracts the JSON portion of the request and allows the server to work with it as a dictionary.
+
+**`action` attribute in the HTML while using Axios**
+
+-   With Axios, the `action` attribute is not essential for sending data.
+-   It can be useful as a fallback or for clarity.
+
+**Disable Form Element**
+
+Use jQuery methods to target the submit button and input field element and set their `disabld` property to `true`. This will prevent users from interacting with the elements. 
+
+```js
+function disableFutureGuesses() {
+  $("#submit-btn").prop("disabled", true);
+  $("input").prop("disabled", true);
+}
+```
+
+**Data Structure differences between `request.json` and `request.form`**
+
+- `request.json`: It can be an object, array, or a combination of both, depending on how the data was formatted on the client-side (frontend). This attribute typically holds data sent in JSON format within the request body. 
+- `request.form`: It's a key-value structure (dictionary-like object), where keys (strings) from form field names and values are the submitted data from those fields. 
+  - Values are typically strings (user input in the fields), depends on the form configuration, values could also be lists (e.g., multiple selection checkboxes).
 
 ### Continued development
 
@@ -133,23 +192,47 @@ First session: 2 hrs
 Second session: 6 hrs
 Thrid session: 6 hrs
 
-### Questions - Sonia Recording 
+### Debug
 
-- 00:46, Why do I need to give it a `key word`?
-  
 ```js
-let formData = {guess: $guessInput.val()}
-```
 
-- 03:04
-  
-```python
-
-# Endpoint
-@app.route('/submit-guess', methods=['POST'])
-def submit():
-  guess = request.json['guess']
-  ...
-  return jsonify({})
-
+async function sendToServer(data) {
+  try {
+    const resp = await axios({
+      method: "POST",
+      url: "/submit-guess",
+      data: data,
+    });
+    // Check for submission status
+    if (resp.status === 200) {
+      console.log("Guess submitted successfully.");
+    } else {
+      console.log("Guess submitting error: ", resp.status);
+    }
+  } catch (error) {
+    // Check for Axios specific errors
+    if (error.isAxiosError) {
+      if (error.response) {
+        // The request was made and the server responded with a status code
+        // that falls out of the range of 2xx.
+        console.error(
+          "Error submitting guess: ",
+          error.response.data || error.response.statusText
+        );
+      } else if (error.request) {
+        // The request was made but no response was received
+        // (e.g., server error or network problem)
+        console.error(
+          "Error submitting guess: No response received from server."
+        );
+      } else {
+        // Something happened in setting up the request that triggered an Error
+        console.error("Error submitting guess: ", error.message);
+      }
+    } else {
+      // Not an Axios error, handle other errors generically
+      console.error("Error submitting guess:", error.message || error);
+    }
+  }
+}
 ```

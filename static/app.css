@@ -1,0 +1,23 @@
+#game-board{
+    margin-bottom: 2rem;
+    padding: 0.25rem;
+}
+
+table {
+    border: 1px solid black;
+    padding: 0.5rem;
+}
+td {
+    background-color: red;
+    padding: 0.5rem;
+}
+
+.ok {
+    background-color: rgb(47, 255, 78);
+    padding: 0.25rem;
+}
+
+.wrong-guess {
+    background-color: red;
+    padding: 0.25rem;
+}
